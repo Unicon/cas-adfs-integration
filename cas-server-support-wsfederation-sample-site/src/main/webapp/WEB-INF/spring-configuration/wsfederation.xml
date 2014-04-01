@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to Jasig under one or more contributor license
+    agreements. See the NOTICE file distributed with this work
+    for additional information regarding copyright ownership.
+    Jasig licenses this file to you under the Apache License,
+    Version 2.0 (the "License"); you may not use this file
+    except in compliance with the License.  You may obtain a
+    copy of the License at the following location:
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+       
+    <description>
+        This configures the WS-Federation support module.
+    </description>
+    
+    <bean id="wsFederationAction" class="net.unicon.cas.support.wsfederation.web.flow.WsFederationAction">
+        <property name="centralAuthenticationService" ref="centralAuthenticationService" />
+        <property name="configuration" ref="wsFedConfig" />
+    </bean>
+    
+    <bean id="wsFedConfig" class="net.unicon.cas.support.wsfederation.WsFederationConfiguration">
+        <!-- 
+         identityProviderIdentifier: the identifer for the ADFS server
+         identityProviderUrl: the login url for ADFS
+         identityAttribute: the name of the attribute/assertion returned by ADFS that contains the principal's username.
+         relyingPartyIdentifier: the identifier of the CAS Server as it has been configured in ADFS.
+         tolerance: (optional) the amount of drift to allow when validating the timestamp on the token. Default: 10000 (ms)
+         attributeMutator: (optional) a class (defined by you) that can modify the attributes/assertions returned by the ADFS server
+         signingCertificateFiles: ADFS's signing certificate used to validate the token/assertions issued by ADFS.
+         -->
+        <property name="identityProviderIdentifier" value="http://adfs.example.org/adfs/services/trust" />
+        <property name="identityProviderUrl" value="https://adfs.example.org/adfs/ls/" />
+        <property name="identityAttribute" value="upn" />
+        <property name="relyingPartyIdentifier" value="urn:federation:cas" />
+        <property name="tolerance" value="60000" />
+        <property name="attributeMutator">
+            <bean class="org.example.cas.support.wsfederation.WsFedAttributeMutatorImpl" />
+        </property>
+        <property name="signingCertificateFiles">
+            <list>
+                <value>signing.cer</value>
+            </list>
+        </property>
+    </bean>
+</beans>
