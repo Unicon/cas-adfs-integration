@@ -1,0 +1,11 @@
+#Mon Mar 31 19:09:05 PDT 2014
+/Users/jgasper/Documents/projects/cas-adfs-integration/cas-server-support-wsfederation/src/main/java/net/unicon/cas/support/wsfederation/WsFederationConfiguration.java=1396317541000
+/Users/jgasper/Documents/projects/cas-adfs-integration/cas-server-support-wsfederation/src/main/java/net/unicon/cas/support/wsfederation/authentication/handler/support/WsFederationAuthenticationHandler.java=1396317541000
+/Users/jgasper/Documents/projects/cas-adfs-integration/cas-server-support-wsfederation/src/main/java/net/unicon/cas/support/wsfederation/authentication/principal/WsFederationCredentialsToPrincipalResolver.java=1396317541000
+/Users/jgasper/Documents/projects/cas-adfs-integration/cas-server-support-wsfederation/src/main/java/net/unicon/cas/support/wsfederation/authentication/WsFederationAuthenticationMetaDataPopulator.java=1396317541000
+/Users/jgasper/Documents/projects/cas-adfs-integration/cas-server-support-wsfederation/src/main/java/net/unicon/cas/support/wsfederation/authentication/principal/WsFederationCredentials.java=1396317541000
+/Users/jgasper/Documents/projects/cas-adfs-integration/cas-server-support-wsfederation/src/main/java/net/unicon/cas/support/wsfederation/WsFederationAttributeMutator.java=1396317541000
+/Users/jgasper/Documents/projects/cas-adfs-integration/cas-server-support-wsfederation/src/main/java/net/unicon/cas/support/wsfederation/web/flow/WsFederationAction.java=1396317541000
+/Users/jgasper/Documents/projects/cas-adfs-integration/cas-server-support-wsfederation/src/main/java/net/unicon/cas/support/wsfederation/WsFederationUtils.java=1396318130000
+configuration*?=CFFF0D669075D209F5753C22EA160D95815468E4
+/Users/jgasper/Documents/projects/cas-adfs-integration/cas-server-support-wsfederation/src/main/java/net/unicon/cas/support/wsfederation/authentication/principal/WsFederationCredential.java=1396317541000

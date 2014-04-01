@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<rss version="0.91">
+  <channel>
+    <title>Jasig CAS WS-Federation Support - Checkstyle report</title>
+    <link>http://www.unicon.net/</link>
+    <description>Jasig CAS WS-Federation Support - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2014</copyright>
+    <item>
+      <title>File: 9,
+             Errors: 0,
+             Warnings: 0,
+             Infos: 0
+      </title>
+            <link>http://www.unicon.net//checkstyle.html</link>
+      <description>
+        <p>Click <a href="http://www.unicon.net//checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="http://www.unicon.net//checkstyle.html#net.unicon.cas.support.wsfederation.WsFederationAttributeMutator.java">net/unicon/cas/support/wsfederation/WsFederationAttributeMutator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.unicon.net//checkstyle.html#net.unicon.cas.support.wsfederation.web.flow.WsFederationAction.java">net/unicon/cas/support/wsfederation/web/flow/WsFederationAction.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.unicon.net//checkstyle.html#net.unicon.cas.support.wsfederation.authentication.principal.WsFederationCredentials.java">net/unicon/cas/support/wsfederation/authentication/principal/WsFederationCredentials.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.unicon.net//checkstyle.html#net.unicon.cas.support.wsfederation.authentication.WsFederationAuthenticationMetaDataPopulator.java">net/unicon/cas/support/wsfederation/authentication/WsFederationAuthenticationMetaDataPopulator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.unicon.net//checkstyle.html#net.unicon.cas.support.wsfederation.WsFederationUtils.java">net/unicon/cas/support/wsfederation/WsFederationUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.unicon.net//checkstyle.html#net.unicon.cas.support.wsfederation.authentication.handler.support.WsFederationAuthenticationHandler.java">net/unicon/cas/support/wsfederation/authentication/handler/support/WsFederationAuthenticationHandler.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.unicon.net//checkstyle.html#net.unicon.cas.support.wsfederation.authentication.principal.WsFederationCredentialsToPrincipalResolver.java">net/unicon/cas/support/wsfederation/authentication/principal/WsFederationCredentialsToPrincipalResolver.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.unicon.net//checkstyle.html#net.unicon.cas.support.wsfederation.WsFederationConfiguration.java">net/unicon/cas/support/wsfederation/WsFederationConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.unicon.net//checkstyle.html#net.unicon.cas.support.wsfederation.authentication.principal.WsFederationCredential.java">net/unicon/cas/support/wsfederation/authentication/principal/WsFederationCredential.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+
