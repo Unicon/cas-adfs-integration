@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 import org.opensaml.saml1.core.impl.AssertionImpl;
 import org.opensaml.xml.security.x509.BasicX509Credential;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -45,6 +46,9 @@ public class WsFederationUtilsTests {
     
     @Autowired
     HashMap<String,String> testTokens;
+
+    @Autowired
+    ApplicationContext ctx;
 
     /**
      *
@@ -127,7 +131,7 @@ public class WsFederationUtilsTests {
     @Test
     public void testValidateSignatureBadKey() throws Exception {
         List<BasicX509Credential> signingWallet = new ArrayList<BasicX509Credential>();
-        signingWallet.add(WsFederationUtils.getSigningCredential("target/test-classes/bad-signing.crt"));
+        signingWallet.add(WsFederationUtils.getSigningCredential(ctx.getResource("classpath:bad-signing.crt")));
         String wresult = testTokens.get("goodToken");
         AssertionImpl assertion = WsFederationUtils.parseTokenFromString(wresult);
         boolean result = WsFederationUtils.validateSignature(assertion, signingWallet);

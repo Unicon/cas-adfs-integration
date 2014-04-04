@@ -52,7 +52,7 @@
         </property>
         <property name="signingCertificateFiles">
             <list>
-                <value>signing.cer</value>
+                <value>file:/etc/cas/signing.cer</value>
             </list>
         </property>
     </bean>

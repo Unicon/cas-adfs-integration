@@ -11,7 +11,7 @@
         <property name="tolerance" value="2000" />
         <property name="signingCertificateFiles">
             <list>
-                <value>target/test-classes/adfs-signing.crt</value>
+                <value>classpath:adfs-signing.crt</value>
             </list>
         </property>
     </bean>

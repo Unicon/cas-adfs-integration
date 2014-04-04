@@ -17,6 +17,7 @@
 package net.unicon.cas.support.wsfederation;
 
 import org.opensaml.xml.security.x509.BasicX509Credential;
+import org.springframework.core.io.Resource;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -32,7 +33,6 @@ public final class WsFederationConfiguration {
     @NotNull
     private String identityAttribute;
 
-
     @NotNull
     private String identityProviderIdentifier;
 
@@ -40,7 +40,7 @@ public final class WsFederationConfiguration {
     private String identityProviderUrl;
 
     @NotNull
-    private List<String> signingCertificateFiles;
+    private List<Resource> signingCertificateFiles;
 
     @NotNull
     private String relyingPartyIdentifier;
@@ -137,7 +137,7 @@ public final class WsFederationConfiguration {
      *
      * @return the list of files
      */
-    public List<String> getSigningCertificateFiles() {
+    public List<Resource> getSigningCertificateFiles() {
         return this.signingCertificateFiles;
     }
 
@@ -146,12 +146,12 @@ public final class WsFederationConfiguration {
      *
      * @param signingCertificateFiles a list of certificate files to read in.
      */
-    public void setSigningCertificateFiles(final List<String> signingCertificateFiles) {
+    public void setSigningCertificateFiles(final List<Resource> signingCertificateFiles) {
         this.signingCertificateFiles = signingCertificateFiles;
 
         final List<BasicX509Credential> signingCerts = new ArrayList<BasicX509Credential>();
 
-        for (String file : signingCertificateFiles) {
+        for (Resource file : signingCertificateFiles) {
             signingCerts.add(WsFederationUtils.getSigningCredential(file));
         }
 

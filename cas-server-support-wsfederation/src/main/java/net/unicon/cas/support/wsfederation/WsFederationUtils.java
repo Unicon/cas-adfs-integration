@@ -37,15 +37,13 @@ import org.opensaml.xml.security.x509.BasicX509Credential;
 import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.SignatureValidator;
 import org.opensaml.xml.validation.ValidationException;
+import org.springframework.core.io.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -148,19 +146,17 @@ public final class WsFederationUtils {
     /**
      * getSigningCredential loads up an X509Credential from a file.
      *
-     * @param filename the signing certificate file
+     * @param resource the signing certificate file
      * @return an X509 credential
      */
-    public static BasicX509Credential getSigningCredential(final String filename) {
+    public static BasicX509Credential getSigningCredential(final Resource resource) {
         final Logger logger = LoggerFactory.getLogger(WsFederationUtils.class);
 
-        //grab the certificate file
-        final File certificateFile = new File(filename);
         BasicX509Credential publicCredential;
 
-        //get the certificate from the file
         try {
-            final InputStream inputStream = new FileInputStream(certificateFile);
+            //grab the certificate file
+            final InputStream inputStream = resource.getInputStream();
             final CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
             final X509Certificate certificate = (X509Certificate) certificateFactory.generateCertificate(inputStream);
 
@@ -185,10 +181,6 @@ public final class WsFederationUtils {
             logger.error("Error retrieving the signing cert: {}", ex.getMessage());
             return null;
 
-        } catch (final FileNotFoundException ex) {
-            logger.error("Error retrieving the signing cert: {}", ex.getMessage());
-            return null;
-
         } catch (final InvalidKeySpecException ex) {
             logger.error("Error retrieving the signing cert: {}", ex.getMessage());
             return null;
@@ -196,6 +188,10 @@ public final class WsFederationUtils {
         } catch (final NoSuchAlgorithmException ex) {
             logger.error("Error retrieving the signing cert: {}", ex.getMessage());
             return null;
+
+        } catch (final IOException ex) {
+             logger.error("Error retrieving the signing cert: " + ex.getMessage());
+             return null;
         }
 
         logger.debug("getSigningCredential: key retrieved.");
