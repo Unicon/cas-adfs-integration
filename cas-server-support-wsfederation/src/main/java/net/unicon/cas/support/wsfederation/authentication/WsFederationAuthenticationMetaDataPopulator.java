@@ -43,7 +43,7 @@ public final class WsFederationAuthenticationMetaDataPopulator implements Authen
     @Override
     public Authentication populateAttributes(final Authentication authentication, final Credentials credentials) {
         if (credentials instanceof WsFederationCredentials) {
-            WsFederationCredentials wsFedCredentials = (WsFederationCredentials) credentials;
+            final WsFederationCredentials wsFedCredentials = (WsFederationCredentials) credentials;
 
             final Principal simplePrincipal = new SimplePrincipal(authentication.getPrincipal().getId(),
                     wsFedCredentials.getCredential().getAttributes());

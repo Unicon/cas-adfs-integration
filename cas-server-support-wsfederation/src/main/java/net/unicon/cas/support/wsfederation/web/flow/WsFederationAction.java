@@ -154,7 +154,7 @@ public final class WsFederationAction extends AbstractAction {
                 saveRequestParameter(request, session, METHOD);
 
                 final String key = PROVIDERURL;
-                String authorizationUrl = this.configuration.getIdentityProviderUrl()
+                final String authorizationUrl = this.configuration.getIdentityProviderUrl()
                         + QUERYSTRING
                         + this.configuration.getRelyingPartyIdentifier();
 
