@@ -1,4 +1,4 @@
-﻿<!--
+<!--
  Copyright 2014 Unicon, Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -65,7 +65,8 @@
 		<connection>scm:git:git@github.com:Unicon/cas-adfs-integration.git</connection>
 		<developerConnection>scm:git:git@github.com:Unicon/cas-adfs-integration.git</developerConnection>
 		<url>https://github.com/Unicon/cas-adfs-integration</url>
-	</scm>
+	  <tag>HEAD</tag>
+  </scm>
 
 	<repositories>
 		<repository>
@@ -127,6 +128,14 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	<distributionManagement>
+		<site>
+			<id>wsfederation-site</id>
+			<name>Staging Site Documentation</name>
+			<url>file:${project.site.deployDirectory}</url>
+		</site>
+	</distributionManagement>
 
 	<build>
 		<plugins>
