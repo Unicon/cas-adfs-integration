@@ -18,7 +18,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.unicon.cas</groupId>
 	<artifactId>cas-server-support-wsfederation</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>Jasig CAS WS-Federation Support</name>
 	<description>Server support library for the Apereo (Jasig) CAS Server and Microsoft ADFS</description>
