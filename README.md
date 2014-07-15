@@ -1,8 +1,14 @@
-cas-adfs-integration [![Build Status](https://travis-ci.org/Unicon/cas-adfs-integration.svg?branch=master)](https://travis-ci.org/Unicon/cas-adfs-integration)
+cas-adfs-integration [![Build Status](https://travis-ci.org/Unicon/cas-adfs-integration.svg?branch=master)](https://travis-ci.org/Unicon/cas-adfs-integration) [ ![Codeship Status for jtgasper3/cas-adfs-integration](https://www.codeship.io/projects/78679d20-ee7e-0131-30df-429ee894f4d5/status)](https://www.codeship.io/projects/26865)
 ====================
 
 #Overview
-This project is a super project documenting multiple ways to integrate Apereo/Jasig CAS Server and Microsoft's ADFS.## cas-server-support-wsfederationThis method of integrating CAS Server and ADFS delegates user authentication from CAS Server to ADFS. This is accomplished by making CAS Server a WS-Federation client. Claims released from ADFS are made available as attributes to CAS Server, and by extension CAS Clients.## ADFS CASificationThis method of integrating CAS Server and ADFS delegates user authentication from ADFS to CAS server by CASifying ADFS. This method requires that the CAS Server supports the ClearPass protocol.
+This project is a super project documenting multiple ways to integrate Apereo/Jasig CAS Server and Microsoft's ADFS.
+
+## cas-server-support-wsfederation
+This method of integrating CAS Server and ADFS delegates user authentication from CAS Server to ADFS. This is accomplished by making CAS Server a WS-Federation client. Claims released from ADFS are made available as attributes to CAS Server, and by extension CAS Clients.
+
+## ADFS CASification
+This method of integrating CAS Server and ADFS delegates user authentication from ADFS to CAS server by CASifying ADFS. This method requires that the CAS Server supports the ClearPass protocol.
 The cas-server-support-wsfederation module provides integration support for Microsoft's Active Directory Federation
 Services v2.0 (and potentially other WS-Federation based IdPs) with CAS Server.
 
