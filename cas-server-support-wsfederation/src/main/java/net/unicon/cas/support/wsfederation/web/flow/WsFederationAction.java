@@ -114,6 +114,8 @@ public final class WsFederationAction extends AbstractAction {
 
                     } else {
                         logger.warn("SAML assertions are blank or no longer valid.");
+                        final String authorizationUrl = String.format("%s%s%s",this.configuration.getIdentityProviderUrl(), QUERYSTRING, this.getRelyingPartyIdentifier(service));
+                        context.getFlowScope().put(PROVIDERURL, authorizationUrl);
                         return error();
                     }
 
