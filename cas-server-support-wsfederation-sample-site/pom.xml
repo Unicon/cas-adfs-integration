@@ -10,7 +10,7 @@
   <description>Sample web application demonstrating the cas-server-support-wsfederation library.</description>
 
   <properties>
-		<cas.version>3.5.2.1</cas.version>
+		<cas.version>3.5.3</cas.version>
 		<junit.version>4.10</junit.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
