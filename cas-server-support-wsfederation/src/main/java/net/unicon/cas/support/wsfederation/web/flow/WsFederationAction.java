@@ -16,6 +16,7 @@
 
 package net.unicon.cas.support.wsfederation.web.flow;
 
+import net.unicon.cas.addons.serviceregistry.RegisteredServiceWithAttributes;
 import net.unicon.cas.support.wsfederation.WsFederationConfiguration;
 import net.unicon.cas.support.wsfederation.WsFederationUtils;
 import net.unicon.cas.support.wsfederation.authentication.principal.WsFederationCredential;
@@ -24,6 +25,8 @@ import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.CentralAuthenticationService;
 import org.jasig.cas.authentication.principal.Credentials;
 import org.jasig.cas.authentication.principal.Service;
+import org.jasig.cas.services.RegisteredService;
+import org.jasig.cas.services.ServicesManager;
 import org.jasig.cas.ticket.TicketException;
 import org.jasig.cas.web.support.WebUtils;
 import org.opensaml.saml1.core.impl.AssertionImpl;
@@ -63,6 +66,8 @@ public final class WsFederationAction extends AbstractAction {
     @NotNull
     private CentralAuthenticationService centralAuthenticationService;
 
+    private ServicesManager servicesManager;
+
     /**
      * Executes the webflow action.
      *
@@ -95,7 +100,8 @@ public final class WsFederationAction extends AbstractAction {
                     final WsFederationCredential credential = WsFederationUtils.createCredentialFromToken(assertion);
 
                     final Credentials credentials;
-                    if (credential != null && credential.isValid(configuration.getRelyingPartyIdentifier(),
+                    final Service service = (Service) session.getAttribute(SERVICE);
+                    if (credential != null && credential.isValid(getRelyingPartyIdentifier(service),
                             configuration.getIdentityProviderIdentifier(),
                             configuration.getTolerance())) {
 
@@ -108,12 +114,13 @@ public final class WsFederationAction extends AbstractAction {
 
                     } else {
                         logger.warn("SAML assertions are blank or no longer valid.");
+                        final String authorizationUrl = String.format("%s%s%s",this.configuration.getIdentityProviderUrl(), QUERYSTRING, this.getRelyingPartyIdentifier(service));
+                        context.getFlowScope().put(PROVIDERURL, authorizationUrl);
                         return error();
                     }
 
                     // retrieve parameters from web session
                     try {
-                        final Service service = (Service) session.getAttribute(SERVICE);
                         context.getFlowScope().put(SERVICE, service);
                         restoreRequestAttribute(request, session, THEME);
                         restoreRequestAttribute(request, session, LOCALE);
@@ -153,10 +160,12 @@ public final class WsFederationAction extends AbstractAction {
                 saveRequestParameter(request, session, LOCALE);
                 saveRequestParameter(request, session, METHOD);
 
+                final String relyingPartyIdentifier = this.getRelyingPartyIdentifier(service);
+
                 final String key = PROVIDERURL;
                 final String authorizationUrl = this.configuration.getIdentityProviderUrl()
                         + QUERYSTRING
-                        + this.configuration.getRelyingPartyIdentifier();
+                        + relyingPartyIdentifier;
 
                 logger.debug("{} -> {}", key, authorizationUrl);
                 context.getFlowScope().put(key, authorizationUrl);
@@ -170,6 +179,26 @@ public final class WsFederationAction extends AbstractAction {
             return error();
         }
 
+    }
+
+    /**
+     * Get the relying party id for a service.
+     *
+     * @param service the service to get an id for
+     * @return relying party id
+     */
+    private String getRelyingPartyIdentifier(final Service service) {
+        String relyingPartyIdentifier = this.configuration.getRelyingPartyIdentifier();
+        if (service != null) {
+            final RegisteredService registeredService = this.servicesManager.findServiceBy(service);
+            if (registeredService instanceof RegisteredServiceWithAttributes
+                    && ((RegisteredServiceWithAttributes) registeredService).
+                    getExtraAttributes().containsKey("wsfed.relyingPartyId")) {
+                relyingPartyIdentifier = ((RegisteredServiceWithAttributes) registeredService).
+                        getExtraAttributes().get("wsfed.relyingPartyId").toString();
+            }
+        }
+        return relyingPartyIdentifier;
     }
 
     /**
@@ -214,5 +243,14 @@ public final class WsFederationAction extends AbstractAction {
      */
     public void setConfiguration(final WsFederationConfiguration configuration) {
         this.configuration = configuration;
+    }
+
+    /**
+     * set the services Manager.
+     *
+     * @param servicesManager the services manager
+     */
+    public void setServicesManager(final ServicesManager servicesManager) {
+        this.servicesManager = servicesManager;
     }
 }
