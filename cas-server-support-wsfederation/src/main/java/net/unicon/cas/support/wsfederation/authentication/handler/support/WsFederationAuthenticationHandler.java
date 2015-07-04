@@ -16,10 +16,16 @@
 
 package net.unicon.cas.support.wsfederation.authentication.handler.support;
 
-import net.unicon.cas.support.wsfederation.authentication.principal.WsFederationCredentials;
-import org.jasig.cas.authentication.handler.AuthenticationException;
+import net.unicon.cas.support.wsfederation.authentication.principal.WsFederationCredential;
+import org.jasig.cas.authentication.BasicCredentialMetaData;
+import org.jasig.cas.authentication.Credential;
+import org.jasig.cas.authentication.HandlerResult;
+import org.jasig.cas.authentication.PreventedException;
 import org.jasig.cas.authentication.handler.support.AbstractPreAndPostProcessingAuthenticationHandler;
-import org.jasig.cas.authentication.principal.Credentials;
+import org.jasig.cas.authentication.principal.SimplePrincipal;
+
+import javax.security.auth.login.FailedLoginException;
+import java.security.GeneralSecurityException;
 
 /**
  * This handler authenticates Security token/credentials.
@@ -36,21 +42,18 @@ public final class WsFederationAuthenticationHandler extends AbstractPreAndPostP
      * @return true if supported, otherwise false
      */
     @Override
-    public boolean supports(final Credentials credentials) {
-        return credentials != null && (WsFederationCredentials.class.isAssignableFrom(credentials.getClass()));
+    public boolean supports(final Credential credentials) {
+        return credentials != null && (WsFederationCredential.class.isAssignableFrom(credentials.getClass()));
     }
 
-    /**
-     * doAuthentication does the authentication. In this case if the credential is not null, passes.
-     *
-     * @param credentials the credentials to check.
-     * @return true if the credential exists (authenticated by the IdP).
-     * @throws AuthenticationException an authentication exception
-     */
     @Override
-    protected boolean doAuthentication(final Credentials credentials) throws AuthenticationException {
-        final WsFederationCredentials wsFederationCredentials = (WsFederationCredentials) credentials;
-
-        return (wsFederationCredentials.getCredential() != null);
+    protected HandlerResult doAuthentication(final Credential credential) throws GeneralSecurityException, PreventedException {
+        final WsFederationCredential wsFederationCredentials = (WsFederationCredential) credential;
+        if (wsFederationCredentials != null) {
+            return new HandlerResult(this, new BasicCredentialMetaData(wsFederationCredentials),
+                    new SimplePrincipal(wsFederationCredentials.getId()));
+        }
+        throw new FailedLoginException();
     }
+
 }

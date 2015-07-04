@@ -19,10 +19,8 @@ package net.unicon.cas.support.wsfederation.web.flow;
 import net.unicon.cas.support.wsfederation.WsFederationConfiguration;
 import net.unicon.cas.support.wsfederation.WsFederationUtils;
 import net.unicon.cas.support.wsfederation.authentication.principal.WsFederationCredential;
-import net.unicon.cas.support.wsfederation.authentication.principal.WsFederationCredentials;
 import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.CentralAuthenticationService;
-import org.jasig.cas.authentication.principal.Credentials;
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.ticket.TicketException;
 import org.jasig.cas.web.support.WebUtils;
@@ -94,7 +92,6 @@ public final class WsFederationAction extends AbstractAction {
                 if (assertion != null && WsFederationUtils.validateSignature(assertion, configuration.getSigningCertificates())) {
                     final WsFederationCredential credential = WsFederationUtils.createCredentialFromToken(assertion);
 
-                    final Credentials credentials;
                     if (credential != null && credential.isValid(configuration.getRelyingPartyIdentifier(),
                             configuration.getIdentityProviderIdentifier(),
                             configuration.getTolerance())) {
@@ -104,7 +101,6 @@ public final class WsFederationAction extends AbstractAction {
                             configuration.getAttributeMutator().modifyAttributes(credential.getAttributes());
                         }
 
-                        credentials = new WsFederationCredentials(credential);
 
                     } else {
                         logger.warn("SAML assertions are blank or no longer valid.");
@@ -126,9 +122,9 @@ public final class WsFederationAction extends AbstractAction {
 
                     try {
                         WebUtils.putTicketGrantingTicketInRequestScope(context, this.centralAuthenticationService
-                                .createTicketGrantingTicket(credentials));
+                                .createTicketGrantingTicket(credential));
 
-                        logger.info("Token validated and new WsFederationCredcredentials created: {}", credentials.toString());
+                        logger.info("Token validated and new WsFederationCredcredentials created: {}", credential.toString());
                         return success();
 
                     } catch (final TicketException e) {

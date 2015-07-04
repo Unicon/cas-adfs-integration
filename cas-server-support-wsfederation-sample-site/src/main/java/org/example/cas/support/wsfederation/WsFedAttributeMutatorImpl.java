@@ -1,10 +1,10 @@
 package org.example.cas.support.wsfederation;
 
-import java.util.Map;
 import net.unicon.cas.support.wsfederation.WsFederationAttributeMutator;
-import net.unicon.cas.support.wsfederation.WsFederationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 /**
  * This will remove the @example.org from the upn local accounts. Other IdP should
  * have the upn un-altered to prevent users collusions in CAS-based applications.
