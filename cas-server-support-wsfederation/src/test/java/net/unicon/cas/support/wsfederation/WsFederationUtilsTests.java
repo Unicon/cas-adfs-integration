@@ -96,7 +96,7 @@ public class WsFederationUtilsTests {
      */
     @Test
     public void testGetSigningCredential() throws Exception {
-        BasicX509Credential result = WsFederationUtils.getSigningCredential(wsFedConfig.getSigningCertificateFiles().get(0));
+        BasicX509Credential result = WsFederationUtils.getSigningCredential(wsFedConfig.getSigningCertificateFiles().iterator().next());
         assertNotNull("testGetSigningCredential() - Not Null", result);        
     }
 
