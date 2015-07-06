@@ -42,8 +42,8 @@
          attributeMutator: (optional) a class (defined by you) that can modify the attributes/assertions returned by the ADFS server
          signingCertificateFiles: ADFS's signing certificate used to validate the token/assertions issued by ADFS.
          -->
-        <property name="identityProviderIdentifier" value="${adfs.idp.id:http://iam-dev-windows.unicon.net/adfs/services/trust}" />
-        <property name="identityProviderUrl" value="${adfs.idp.login.url:https://iam-dev-windows.unicon.net/adfs/ls/}" />
+        <property name="identityProviderIdentifier" value="${adfs.idp.id:http://iam-dev-windows.something.net/adfs/services/trust}" />
+        <property name="identityProviderUrl" value="${adfs.idp.login.url:https://iam-dev-windows.something.net/adfs/ls/}" />
         <property name="identityAttribute" value="${adfs.identity.attribute:upn}" />
         <property name="relyingPartyIdentifier" value="${adfs.relying.party:urn:cas:localhost}" />
         <property name="tolerance" value="${adfs.tolerance:60000}" />
