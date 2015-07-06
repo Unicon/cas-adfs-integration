@@ -29,6 +29,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>9.3.0.v20150612</version>
                 <configuration>
+                    <jettyXml>/etc/jetty/jetty.xml,/etc/jetty/jetty-ssl.xml,/etc/jetty/jetty-https.xml</jettyXml>
                     <webApp>
                         <contextPath>/cas</contextPath>
                     </webApp>

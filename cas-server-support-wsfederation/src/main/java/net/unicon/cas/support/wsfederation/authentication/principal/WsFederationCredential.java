@@ -123,8 +123,8 @@ public final class WsFederationCredential implements Credential {
     public String toString() {
         String attributeList = "";
 
-        for (String attr : this.attributes.keySet()) {
-            attributeList += "  " + attr + ": " + (attributes.get(attr)).toString() + "\n";
+        for (final String attr : this.attributes.keySet()) {
+            attributeList += "  " + attr + ": " + (attributes.get(attr)) + "\n";
         }
 
         final String readable = "ID: %s\nIssuer: %s\nAudience: %s\nAudience Method: %s\nIssued On: %s\n"

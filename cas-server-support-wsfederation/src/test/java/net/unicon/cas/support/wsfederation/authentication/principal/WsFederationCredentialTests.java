@@ -16,18 +16,20 @@
 
 package net.unicon.cas.support.wsfederation.authentication.principal;
 
-import java.util.HashMap;
 import net.unicon.cas.support.wsfederation.WsFederationUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.opensaml.saml1.core.impl.AssertionImpl;
+import org.opensaml.saml1.core.Assertion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.HashMap;
+
+import static org.junit.Assert.*;
 
 /**
  * @author John Gasper
@@ -62,10 +64,10 @@ public class WsFederationCredentialTests {
      */
     @Test
     public void testToString() {
-        String wresult = testTokens.get("goodToken");
-        AssertionImpl assertion = WsFederationUtils.parseTokenFromString(wresult);
-        WsFederationCredential instance = WsFederationUtils.createCredentialFromToken(assertion);
-        String expResult = 
+        final String wresult = testTokens.get("goodToken");
+        final Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
+        final WsFederationCredential instance = WsFederationUtils.createCredentialFromToken(assertion);
+        final String expResult =
                 "ID: _6257b2bf-7361-4081-ae1f-ec58d4310f61\n" +
                 "Issuer: http://adfs.example.com/adfs/services/trust\n" +
                 "Audience: urn:federation:cas\n" +
@@ -79,7 +81,7 @@ public class WsFederationCredentialTests {
                 "  givenname: John\n" + 
                 "  surname: Gasper\n" +
                 "  Group: example.com\\Domain Users\n";
-        String result = instance.toString();
+        final String result = instance.toString();
         assertEquals("toString() not equal", expResult,result);
     }
 
@@ -100,7 +102,7 @@ public class WsFederationCredentialTests {
     @Test
     public void testIsValidBadAudience() throws Exception {
         standardCred.setAudience("urn:NotUs");
-        boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
+        final boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
         assertFalse("testIsValidBadAudeience() - False", result);
     }
 
