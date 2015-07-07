@@ -61,7 +61,7 @@ import java.util.List;
  * @since 3.5.2
  */
 public final class WsFederationUtils {
-    private static final Logger logger = LoggerFactory.getLogger(WsFederationUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WsFederationUtils.class);
     /**
      * Initialized the openSaml library.
      */
@@ -70,7 +70,7 @@ public final class WsFederationUtils {
             // Initialize the library
             DefaultBootstrap.bootstrap();
         } catch (final ConfigurationException ex) {
-            logger.error(ex.getMessage());
+            LOGGER.error(ex.getMessage());
         }
     }
 
@@ -88,7 +88,7 @@ public final class WsFederationUtils {
      */
     public static WsFederationCredential createCredentialFromToken(final Assertion assertion) {
         final DateTime retrievedOn = new DateTime().withZone(DateTimeZone.UTC);
-        logger.debug("createCredentialFromToken: retrieved on {}", retrievedOn);
+        LOGGER.debug("createCredentialFromToken: retrieved on {}", retrievedOn);
 
         final WsFederationCredential credential = new WsFederationCredential();
         credential.setRetrievedOn(retrievedOn);
@@ -110,7 +110,7 @@ public final class WsFederationUtils {
         //retrieve an attributes from the assertion
         final HashMap<String, Object> attributes = new HashMap<String, Object>();
         for (final Attribute item : assertion.getAttributeStatements().get(0).getAttributes()) {
-            logger.debug("createCredentialFromToken: processed attribute: {}", item.getAttributeName());
+            LOGGER.debug("createCredentialFromToken: processed attribute: {}", item.getAttributeName());
 
             if (item.getAttributeValues().size() == 1) {
                 attributes.put(item.getAttributeName(), ((XSAny) item.getAttributeValues().get(0)).getTextContent());
@@ -127,7 +127,7 @@ public final class WsFederationUtils {
         }
         credential.setAttributes(attributes);
 
-        logger.debug("createCredentialFromToken: {}", credential);
+        LOGGER.debug("createCredentialFromToken: {}", credential);
 
         return credential;
     }
@@ -154,10 +154,10 @@ public final class WsFederationUtils {
             //add the public key
             final BasicX509Credential publicCredential = new BasicX509Credential();
             publicCredential.setPublicKey(publicKey);
-            logger.debug("getSigningCredential: key retrieved.");
+            LOGGER.debug("getSigningCredential: key retrieved.");
             return publicCredential;
         } catch (final Exception ex) {
-            logger.error("I/O error retrieving the signing cert: {}", ex);
+            LOGGER.error("I/O error retrieving the signing cert: {}", ex);
             return null;
         }
     }
@@ -184,13 +184,13 @@ public final class WsFederationUtils {
             final AssertionImpl assertion = (AssertionImpl) rst.get(0).getSecurityTokens().get(0);
 
             if (assertion == null) {
-                logger.debug("parseTokenFromString: assertion null");
+                LOGGER.debug("parseTokenFromString: assertion null");
             } else {
-                logger.debug("parseTokenFromString: {}", assertion);
+                LOGGER.debug("parseTokenFromString: {}", assertion);
             }
             return assertion;
         } catch (final Exception ex) {
-            logger.warn(ex.getMessage());
+            LOGGER.warn(ex.getMessage());
             return null;
         }
     }
@@ -208,7 +208,7 @@ public final class WsFederationUtils {
             try {
                 signatureValidator = new SignatureValidator(cred);
             } catch (final Exception ex) {
-                logger.warn(ex.getMessage());
+                LOGGER.warn(ex.getMessage());
                 break;
             }
 
@@ -218,15 +218,15 @@ public final class WsFederationUtils {
             //try to validate
             try {
                 signatureValidator.validate(signature);
-                logger.debug("validateSignature: Signature is valid.");
+                LOGGER.debug("validateSignature: Signature is valid.");
                 return true;
 
             } catch (final ValidationException ex) {
-                logger.warn("validateSignature: Signature is NOT valid.");
-                logger.warn(ex.getMessage());
+                LOGGER.warn("validateSignature: Signature is NOT valid.");
+                LOGGER.warn(ex.getMessage());
             }
         }
-        logger.warn("validateSignature: Signature doesn't match any signing credential.");
+        LOGGER.warn("validateSignature: Signature doesn't match any signing credential.");
         return false;
     }
 

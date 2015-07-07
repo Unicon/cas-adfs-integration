@@ -63,7 +63,7 @@ public final class WsFederationCredentialsToPrincipalResolver extends PersonDire
     }
 
     @Override
-    public boolean supports(Credential credential) {
+    public boolean supports(final Credential credential) {
         return credential != null && (WsFederationCredential.class.isAssignableFrom(credential.getClass()));
     }
 

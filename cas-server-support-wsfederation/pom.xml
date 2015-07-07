@@ -83,8 +83,8 @@
                 <version>2.15</version>
                 <configuration>
                     <consoleOutput>true</consoleOutput>
-                    <configLocation>https://raw2.github.com/Jasig/cas/master/checkstyle-rules.xml</configLocation>
-                    <suppressionsLocation>https://raw2.github.com/Jasig/cas/master/checkstyle-suppressions.xml</suppressionsLocation>
+                    <configLocation>https://raw.githubusercontent.com/Jasig/cas/master/checkstyle-rules.xml</configLocation>
+                    <suppressionsLocation>https://raw.githubusercontent.com/Jasig/cas/master/checkstyle-suppressions.xml</suppressionsLocation>
                     <failsOnError>true</failsOnError>
                 </configuration>
                 <executions>

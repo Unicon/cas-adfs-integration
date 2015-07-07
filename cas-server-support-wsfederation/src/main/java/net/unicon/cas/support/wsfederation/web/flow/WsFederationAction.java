@@ -25,7 +25,6 @@ import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.ticket.TicketException;
 import org.jasig.cas.web.support.WebUtils;
 import org.opensaml.saml1.core.Assertion;
-import org.opensaml.saml1.core.impl.AssertionImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.webflow.action.AbstractAction;
@@ -75,9 +74,6 @@ public final class WsFederationAction extends AbstractAction {
             final HttpServletRequest request = WebUtils.getHttpServletRequest(context);
             final HttpSession session = request.getSession();
 
-            System.out.println(request.getRequestURI());
-            System.out.println(request.getQueryString());
-            System.out.println(request.getMethod());
             final String wa = request.getParameter(WA);
 
             // it's an authentication

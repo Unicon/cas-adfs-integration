@@ -16,7 +16,6 @@
 
 package net.unicon.cas.support.wsfederation;
 
-import org.opensaml.xml.security.x509.BasicX509Credential;
 import org.opensaml.xml.security.x509.X509Credential;
 import org.springframework.core.io.Resource;
 
