@@ -42,17 +42,17 @@
          attributeMutator: (optional) a class (defined by you) that can modify the attributes/assertions returned by the ADFS server
          signingCertificateFiles: ADFS's signing certificate used to validate the token/assertions issued by ADFS.
          -->
-        <property name="identityProviderIdentifier" value="${adfs.idp.id:http://iam-dev-windows.something.net/adfs/services/trust}" />
-        <property name="identityProviderUrl" value="${adfs.idp.login.url:https://iam-dev-windows.something.net/adfs/ls/}" />
-        <property name="identityAttribute" value="${adfs.identity.attribute:upn}" />
-        <property name="relyingPartyIdentifier" value="${adfs.relying.party:urn:cas:localhost}" />
+        <property name="identityProviderIdentifier" value="${adfs.idp.id}" />
+        <property name="identityProviderUrl" value="${adfs.idp.login.url}" />
+        <property name="identityAttribute" value="${adfs.identity.attribute}" />
+        <property name="relyingPartyIdentifier" value="${adfs.relying.party}" />
         <property name="tolerance" value="${adfs.tolerance:60000}" />
         <property name="attributeMutator">
             <bean class="org.example.cas.support.wsfederation.WsFedAttributeMutatorImpl" />
         </property>
         <property name="signingCertificateFiles">
             <list>
-                <value>${adfs.signing.cert:classpath:/adfs-signing.cer}</value>
+                <value>${adfs.signing.cert}</value>
             </list>
         </property>
     </bean>

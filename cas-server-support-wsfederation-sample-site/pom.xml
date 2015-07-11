@@ -3,22 +3,36 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+
     <!--
+    This project/module is designed to demonstrate how a sample cas overlay
+    can be configured with ws-fed support. As such, the project is
+    tied to a parent pom that exists with the same maven structure and
+    feeds off of all shared settings, versions, etc. In order to successfully
+    build this overlay, the entire project needs to be built first.
+
+    If you're feeling adventurous and rather use this project as a standalone
+    starting point, then
+
+    -->
     <parent>
         <groupId>net.unicon.cas.adfs</groupId>
         <artifactId>cas-adfs-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    -->
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.example</groupId>
     <artifactId>local-cas</artifactId>
-    <packaging>war</packaging>
+
+    <!--
+    <groupId>org.example</groupId>
     <version>${cas.version}</version>
+    -->
+    <packaging>war</packaging>
     <description>Sample web application demonstrating the cas-server-support-wsfederation library.</description>
 
     <properties>
+        <wsfed.module.version>${project.version}</wsfed.module.version>
         <cas.version>4.0.2</cas.version>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
@@ -74,7 +88,7 @@
         <dependency>
             <groupId>net.unicon.cas.adfs</groupId>
             <artifactId>cas-server-support-wsfederation</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${wsfed.module.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
