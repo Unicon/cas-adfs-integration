@@ -21,3 +21,4 @@ See the documentation at: https://github.com/Unicon/cas-adfs-integration/wiki
 ## Versioning
 Version 1.0.0 has been verified that it works with CAS Server versions 3.5.1 through 3.5.2.1.
 
+Version 1.0.1 has been verified that it works with CAS Server versions 4.0.x.
