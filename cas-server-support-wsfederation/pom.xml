@@ -5,7 +5,7 @@
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,263 +14,122 @@
  limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.unicon.cas</groupId>
-	<artifactId>cas-server-support-wsfederation</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>Jasig CAS WS-Federation Support</name>
-	<description>Server support library for the Apereo (Jasig) CAS Server and Microsoft ADFS</description>
-	<url>http://www.unicon.net/</url>
-	<inceptionYear>2014</inceptionYear>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>net.unicon.cas.adfs</groupId>
+        <artifactId>cas-adfs-parent</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+    </parent>
 
-	<licenses>
-		<license>
-			<name>Apache 2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>cas-server-support-wsfederation</artifactId>
+    <packaging>jar</packaging>
+    <name>Apereo CAS WS-Federation Support</name>
+    <description>Server support library for the Apereo (Jasig) CAS Server and Microsoft ADFS</description>
 
-	<developers>
-		<developer>
-			<id>jtgasper3</id>
-			<name>John Gasper</name>
-			<email>jgasper@unicon.net</email>
-			<timezone>-8</timezone>
-			<roles>
-				<role>developer</role>
-				<role>maintainer</role>
-			</roles>
-		</developer>
-	</developers>
+    <dependencies>
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml</artifactId>
+            <version>${opensaml.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
 
-	<contributors>
-		<contributor>
-			<name>Aleksei Lissitsin</name>
-			<url>https://github.com/jimmytheneutrino</url>
-			<roles>
-				<role>tester</role>
-			</roles>
-		</contributor>
-	</contributors>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.10.b1</version>
+                <configuration>
+                    <header>src/licensing/header.txt</header>
+                    <headerDefinitions>
+                        <headerDefinition>src/licensing/header-definitions.xml</headerDefinition>
+                    </headerDefinitions>
+                    <aggregate>true</aggregate>
+                    <excludes>
+                        <exclude>LICENSE</exclude>
+                        <exclude>**/INSTALL*</exclude>
+                        <exclude>**/NOTICE*</exclude>
+                        <exclude>**/README*</exclude>
+                        <exclude>**/readme*</exclude>
+                        <exclude>**/*.log</exclude>
+                        <exclude>**/*.license</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.crt</exclude>
+                        <exclude>**/*.crl</exclude>
+                        <exclude>**/*.key</exclude>
+                        <exclude>**/.gitignore</exclude>
+                        <exclude>**/.eclipse/**</exclude>
+                        <exclude>**/.idea/**</exclude>
+                        <exclude>**/overlays/**</exclude>
+                        <exclude>src/licensing/**</exclude>
+                        <exclude>**/testCA/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
 
-	<issueManagement>
-		<system>GitHub</system>
-		<url>https://github.com/Unicon/cas-adfs-integration/issues</url>
-	</issueManagement>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.15</version>
+                <configuration>
+                    <consoleOutput>true</consoleOutput>
+                    <configLocation>https://raw.githubusercontent.com/Jasig/cas/master/checkstyle-rules.xml</configLocation>
+                    <suppressionsLocation>https://raw.githubusercontent.com/Jasig/cas/master/checkstyle-suppressions.xml</suppressionsLocation>
+                    <failsOnError>true</failsOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                        <goals>
+                            <goal>checkstyle</goal>
+                        </goals>
+                        <phase>compile</phase>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>6.7</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
 
-	<scm>
-		<connection>scm:git:git@github.com:Unicon/cas-adfs-integration.git</connection>
-		<developerConnection>scm:git:git@github.com:Unicon/cas-adfs-integration.git</developerConnection>
-		<url>https://github.com/Unicon/cas-adfs-integration</url>
-	  <tag>HEAD</tag>
-  </scm>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
 
-	<repositories>
-		<repository>
-			<id>sonatype-releases</id>
-			<url>http://oss.sonatype.org/content/repositories/releases/</url>
-		</repository>
-		<repository>
-			<id>sonatype-snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-		</repository>
-	</repositories>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <mavenExecutorId>forked-path</mavenExecutorId>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.jasig.cas</groupId>
-			<artifactId>cas-server-core</artifactId>
-			<version>${cas.version}</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.opensaml</groupId>
-			<artifactId>opensaml</artifactId>
-			<version>${opensaml.version}</version>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>log4j-over-slf4j</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
-			<version>${servlet.api.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>xml-apis</groupId>
-			<artifactId>xml-apis</artifactId>
-			<version>1.4.01</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	
-	<distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.mycila.maven-license-plugin</groupId>
-				<artifactId>maven-license-plugin</artifactId>
-				<version>1.10.b1</version>
-				<configuration>
-					<header>src/licensing/header.txt</header>
-					<headerDefinitions>
-						<headerDefinition>src/licensing/header-definitions.xml</headerDefinition>
-					</headerDefinitions>
-					<aggregate>true</aggregate>
-					<excludes>
-						<exclude>LICENSE</exclude>
-					<exclude>**/INSTALL*</exclude>
-					<exclude>**/NOTICE*</exclude>
-					<exclude>**/README*</exclude>
-					<exclude>**/readme*</exclude>
-					<exclude>**/*.log</exclude>
-					<exclude>**/*.license</exclude>
-					<exclude>**/*.txt</exclude>
-					<exclude>**/*.crt</exclude>
-					<exclude>**/*.crl</exclude>
-					<exclude>**/*.key</exclude>
-					<exclude>**/.gitignore</exclude>
-					<exclude>**/.eclipse/**</exclude>
-					<exclude>**/.idea/**</exclude>
-					<exclude>**/overlays/**</exclude>
-					<exclude>src/licensing/**</exclude>
-					<exclude>**/testCA/**</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>${jdk.version}</source>
-					<target>${jdk.version}</target>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.10</version>
-				<configuration>
-					<consoleOutput>true</consoleOutput>
-					<configLocation>https://raw2.github.com/Jasig/cas/master/checkstyle-rules.xml</configLocation>
-					<suppressionsLocation>https://raw2.github.com/Jasig/cas/master/checkstyle-suppressions.xml</suppressionsLocation>
-					<failsOnError>true</failsOnError>
-				</configuration>
-				<executions>
-					<execution>
-						<id>checkstyle</id>
-						<goals>
-							<goal>checkstyle</goal>
-						</goals>
-						<phase>compile</phase>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>com.puppycrawl.tools</groupId>
-						<artifactId>checkstyle</artifactId>
-						<version>5.6</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.12.4</version>
-				<configuration>
-					<forkMode>once</forkMode>
-					<includes>
-						<include>**/*Tests.java</include>
-					</includes>
-					<excludes>
-						<exclude>**/Abstract*.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<configuration>
-					<mavenExecutorId>forked-path</mavenExecutorId>
-					<tagNameFormat>@{project.version}</tagNameFormat>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.3</version>
-			</plugin>
-		</plugins>
-	</reporting>
-
-	<properties>
-		<cas.version>3.5.3</cas.version>
-		<jdk.version>1.6</jdk.version>
-		<junit.version>4.10</junit.version>
-		<log4j.version>1.2.15</log4j.version>
-		<opensaml.version>2.6.1</opensaml.version>
-		<spring.version>3.1.1.RELEASE</spring.version>
-		<!--<joda-time.version>2.1</joda-time.version>-->
-		<servlet.api.version>2.5</servlet.api.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
+    <properties>
+        <opensaml.version>2.6.1</opensaml.version>
+    </properties>
 </project>

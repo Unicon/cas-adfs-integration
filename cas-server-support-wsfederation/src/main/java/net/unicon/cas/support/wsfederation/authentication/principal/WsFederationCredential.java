@@ -16,6 +16,7 @@
 
 package net.unicon.cas.support.wsfederation.authentication.principal;
 
+import org.jasig.cas.authentication.Credential;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,7 @@ import java.util.Map;
  * @author John Gasper
  * @since 3.5.2
  */
-public final class WsFederationCredential {
+public final class WsFederationCredential implements Credential {
     private final Logger logger = LoggerFactory.getLogger(WsFederationCredential.class);
 
     private String audience;
@@ -122,8 +123,8 @@ public final class WsFederationCredential {
     public String toString() {
         String attributeList = "";
 
-        for (String attr : this.attributes.keySet()) {
-            attributeList += "  " + attr + ": " + (attributes.get(attr)).toString() + "\n";
+        for (final String attr : this.attributes.keySet()) {
+            attributeList += "  " + attr + ": " + (attributes.get(attr)) + "\n";
         }
 
         final String readable = "ID: %s\nIssuer: %s\nAudience: %s\nAudience Method: %s\nIssued On: %s\n"

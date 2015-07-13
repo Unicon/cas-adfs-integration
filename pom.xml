@@ -1,44 +1,194 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>net.unicon.cas</groupId>
-  <artifactId>cas-adfs</artifactId>
-  <packaging>pom</packaging>
-  <name>CAS ADFS Integration</name>
-  <description>Integration scenarios for the Apereo CAS Server and Microsoft ADFS</description>
-  <version>1.0.0-SNAPSHOT</version>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.unicon.cas.adfs</groupId>
+    <artifactId>cas-adfs-parent</artifactId>
+    <packaging>pom</packaging>
+    <name>CAS ADFS Integration Parent</name>
+    <description>Integration scenarios for the Apereo CAS Server and Microsoft ADFS</description>
+    <version>1.0.1-SNAPSHOT</version>
 
-  <url>https://github.com/Unicon/cas-adfs-integration</url>
-  <inceptionYear>2014</inceptionYear>
-  <organization>
-    <name>Unicon Inc.</name>
-    <url>http://unicon.net</url>
-  </organization>
+    <url>https://github.com/Unicon/cas-adfs-integration</url>
+    <inceptionYear>2014</inceptionYear>
+    <organization>
+        <name>Unicon Inc.</name>
+        <url>http://unicon.net</url>
+    </organization>
 
-  <licenses>
-    <license>
-      <name>Apache 2</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-  <developers>
-    <developer>
-      <id>jtgasper3</id>
-      <name>John Gasper</name>
-      <email>jgasper@unicon.net</email>
-    </developer>
-  </developers>
+    <developers>
+        <developer>
+            <id>jtgasper3</id>
+            <name>John Gasper</name>
+            <email>jgasper@unicon.net</email>
+        </developer>
+    </developers>
 
-  <modules>
-    <module>cas-server-support-wsfederation</module>
-    <module>cas-server-support-wsfederation-sample-site</module>
-  </modules>
+    <contributors>
+        <contributor>
+            <name>Aleksei Lissitsin</name>
+            <url>https://github.com/jimmytheneutrino</url>
+            <roles>
+                <role>tester</role>
+            </roles>
+        </contributor>
+    </contributors>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  </properties>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/Unicon/cas-adfs-integration/issues</url>
+    </issueManagement>
+
+    <scm>
+        <connection>scm:git:git@github.com:Unicon/cas-adfs-integration.git</connection>
+        <developerConnection>scm:git:git@github.com:Unicon/cas-adfs-integration.git</developerConnection>
+        <url>https://github.com/Unicon/cas-adfs-integration</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>sonatype-releases</id>
+            <url>http://oss.sonatype.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <modules>
+        <module>cas-server-support-wsfederation</module>
+        <module>cas-server-support-wsfederation-sample-site</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jasig.cas</groupId>
+            <artifactId>cas-server-core</artifactId>
+            <version>${cas.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>aspectjrt</artifactId>
+                    <groupId>org.aspectj</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>junit</artifactId>
+                    <groupId>junit</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+            <version>${servlet.api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.12</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.4.01</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <forkMode>once</forkMode>
+                    <includes>
+                        <include>**/*Tests.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/Abstract*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <cas.version>4.0.2</cas.version>
+        <junit.version>4.11</junit.version>
+        <servlet.api.version>2.5</servlet.api.version>
+        <spring.version>3.1.1.RELEASE</spring.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
 </project>

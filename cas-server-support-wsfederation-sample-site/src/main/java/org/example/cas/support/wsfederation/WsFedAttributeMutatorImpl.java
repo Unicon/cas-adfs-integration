@@ -1,10 +1,10 @@
 package org.example.cas.support.wsfederation;
 
-import java.util.Map;
 import net.unicon.cas.support.wsfederation.WsFederationAttributeMutator;
-import net.unicon.cas.support.wsfederation.WsFederationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 /**
  * This will remove the @example.org from the upn local accounts. Other IdP should
  * have the upn un-altered to prevent users collusions in CAS-based applications.
@@ -16,7 +16,7 @@ public class WsFedAttributeMutatorImpl implements WsFederationAttributeMutator {
     private static final Logger logger = LoggerFactory.getLogger(WsFedAttributeMutatorImpl.class);
 
     @Override
-    public void modifyAttributes(Map<String, Object> attributes) {
+    public void modifyAttributes(final Map<String, Object> attributes) {
         if ( attributes.containsKey("upn") ) {
             attributes.put("upn", attributes.get("upn").toString().replace("@example.org", ""));
             logger.debug(String.format("modifyAttributes: upn modified (%s)", attributes.get("upn").toString()));
@@ -31,7 +31,7 @@ public class WsFedAttributeMutatorImpl implements WsFederationAttributeMutator {
         attributeMapping(attributes, "employeeNumber", "UDC_IDENTIFIER");
     }
 
-    private void attributeMapping(Map<String, Object> attributes, String oldName, String newName) {
+    private void attributeMapping(final Map<String, Object> attributes, final String oldName, final String newName) {
         if ( attributes.containsKey(oldName) ) {
             logger.debug(String.format("attributeRemapping: %s -> %s (%s)", oldName, newName, attributes.get(oldName)));
             attributes.put(newName, attributes.get(oldName));

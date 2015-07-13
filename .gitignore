@@ -1,1 +1,5 @@
 target/
+.idea
+*.log
+**/overlays/**
+*.iml

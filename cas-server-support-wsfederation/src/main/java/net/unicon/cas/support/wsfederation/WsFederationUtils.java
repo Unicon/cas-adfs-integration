@@ -20,6 +20,7 @@ import net.unicon.cas.support.wsfederation.authentication.principal.WsFederation
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.opensaml.DefaultBootstrap;
+import org.opensaml.saml1.core.Assertion;
 import org.opensaml.saml1.core.Attribute;
 import org.opensaml.saml1.core.Conditions;
 import org.opensaml.saml1.core.impl.AssertionImpl;
@@ -29,31 +30,25 @@ import org.opensaml.xml.Configuration;
 import org.opensaml.xml.ConfigurationException;
 import org.opensaml.xml.io.Unmarshaller;
 import org.opensaml.xml.io.UnmarshallerFactory;
-import org.opensaml.xml.io.UnmarshallingException;
 import org.opensaml.xml.parse.BasicParserPool;
-import org.opensaml.xml.parse.XMLParserException;
 import org.opensaml.xml.schema.XSAny;
 import org.opensaml.xml.security.x509.BasicX509Credential;
+import org.opensaml.xml.security.x509.X509Credential;
 import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.SignatureValidator;
 import org.opensaml.xml.validation.ValidationException;
-import org.springframework.core.io.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,17 +61,16 @@ import java.util.List;
  * @since 3.5.2
  */
 public final class WsFederationUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WsFederationUtils.class);
     /**
      * Initialized the openSaml library.
      */
     static {
-        final Logger logger = LoggerFactory.getLogger(WsFederationUtils.class);
-
         try {
             // Initialize the library
             DefaultBootstrap.bootstrap();
         } catch (final ConfigurationException ex) {
-            logger.error(ex.getMessage());
+            LOGGER.error(ex.getMessage());
         }
     }
 
@@ -92,11 +86,9 @@ public final class WsFederationUtils {
      * @param assertion the provided assertion
      * @return an equivalent credential.
      */
-    public static WsFederationCredential createCredentialFromToken(final AssertionImpl assertion) {
-        final Logger logger = LoggerFactory.getLogger(WsFederationUtils.class);
-
+    public static WsFederationCredential createCredentialFromToken(final Assertion assertion) {
         final DateTime retrievedOn = new DateTime().withZone(DateTimeZone.UTC);
-        logger.debug("createCredentialFromToken: retrieved on {}", retrievedOn.toString());
+        LOGGER.debug("createCredentialFromToken: retrieved on {}", retrievedOn);
 
         final WsFederationCredential credential = new WsFederationCredential();
         credential.setRetrievedOn(retrievedOn);
@@ -117,16 +109,13 @@ public final class WsFederationUtils {
 
         //retrieve an attributes from the assertion
         final HashMap<String, Object> attributes = new HashMap<String, Object>();
-        for (Attribute item : assertion.getAttributeStatements().get(0).getAttributes()) {
-            logger.debug("createCredentialFromToken: processed attribute: {}", item.getAttributeName());
+        for (final Attribute item : assertion.getAttributeStatements().get(0).getAttributes()) {
+            LOGGER.debug("createCredentialFromToken: processed attribute: {}", item.getAttributeName());
 
             if (item.getAttributeValues().size() == 1) {
                 attributes.put(item.getAttributeName(), ((XSAny) item.getAttributeValues().get(0)).getTextContent());
-
             } else {
-
-                final ArrayList<String> itemList = new ArrayList<String>();
-
+                final List<String> itemList = new ArrayList<String>();
                 for (int i = 0; i < item.getAttributeValues().size(); i++) {
                     itemList.add(((XSAny) item.getAttributeValues().get(i)).getTextContent());
                 }
@@ -138,7 +127,7 @@ public final class WsFederationUtils {
         }
         credential.setAttributes(attributes);
 
-        logger.debug("createCredentialFromToken: {}", credential.toString());
+        LOGGER.debug("createCredentialFromToken: {}", credential);
 
         return credential;
     }
@@ -149,22 +138,11 @@ public final class WsFederationUtils {
      * @param resource the signing certificate file
      * @return an X509 credential
      */
-    public static BasicX509Credential getSigningCredential(final Resource resource) {
-        final Logger logger = LoggerFactory.getLogger(WsFederationUtils.class);
-
-        BasicX509Credential publicCredential;
-
-        try {
+    public static X509Credential getSigningCredential(final Resource resource) {
+        try (final InputStream inputStream = resource.getInputStream()) {
             //grab the certificate file
-            final InputStream inputStream = resource.getInputStream();
             final CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
             final X509Certificate certificate = (X509Certificate) certificateFactory.generateCertificate(inputStream);
-
-            try {
-                inputStream.close();
-            } catch (final IOException ex) {
-                logger.warn("Error closing the signing cert file: {}", ex.getMessage());
-            }
 
             //get the public key from the certificate
             final X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(certificate.getPublicKey().getEncoded());
@@ -174,28 +152,14 @@ public final class WsFederationUtils {
             final PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
             //add the public key
-            publicCredential = new BasicX509Credential();
+            final BasicX509Credential publicCredential = new BasicX509Credential();
             publicCredential.setPublicKey(publicKey);
-
-        } catch (final CertificateException ex) {
-            logger.error("Error retrieving the signing cert: {}", ex.getMessage());
+            LOGGER.debug("getSigningCredential: key retrieved.");
+            return publicCredential;
+        } catch (final Exception ex) {
+            LOGGER.error("I/O error retrieving the signing cert: {}", ex);
             return null;
-
-        } catch (final InvalidKeySpecException ex) {
-            logger.error("Error retrieving the signing cert: {}", ex.getMessage());
-            return null;
-
-        } catch (final NoSuchAlgorithmException ex) {
-            logger.error("Error retrieving the signing cert: {}", ex.getMessage());
-            return null;
-
-        } catch (final IOException ex) {
-             logger.error("Error retrieving the signing cert: " + ex.getMessage());
-             return null;
         }
-
-        logger.debug("getSigningCredential: key retrieved.");
-        return publicCredential;
     }
 
     /**
@@ -204,47 +168,31 @@ public final class WsFederationUtils {
      * @param wresult the raw token returned by the IdP
      * @return an assertion
      */
-    public static AssertionImpl parseTokenFromString(final String wresult) {
-        final Logger logger = LoggerFactory.getLogger(WsFederationUtils.class);
+    public static Assertion parseTokenFromString(final String wresult) {
+        try (final InputStream in = new ByteArrayInputStream(wresult.getBytes("UTF-8"))) {
+            final BasicParserPool parserPool = new BasicParserPool();
+            parserPool.setNamespaceAware(true);
 
-        RequestSecurityTokenResponseImpl rsToken;
-
-        final BasicParserPool parserPool = new BasicParserPool();
-        parserPool.setNamespaceAware(true);
-
-        try {
-            final InputStream in = new ByteArrayInputStream(wresult.getBytes("UTF-8"));
             final Document document = parserPool.parse(in);
             final Element metadataRoot = document.getDocumentElement();
             final UnmarshallerFactory unmarshallerFactory = Configuration.getUnmarshallerFactory();
             final Unmarshaller unmarshaller = unmarshallerFactory.getUnmarshaller(metadataRoot);
-            rsToken = (RequestSecurityTokenResponseImpl) unmarshaller.unmarshall(metadataRoot);
+            final RequestSecurityTokenResponseImpl rsToken = (RequestSecurityTokenResponseImpl) unmarshaller.unmarshall(metadataRoot);
 
-        } catch (final UnmarshallingException ex) {
-            logger.warn(ex.getMessage());
+            //Get our SAML token
+            final List<RequestedSecurityToken> rst = rsToken.getRequestedSecurityToken();
+            final AssertionImpl assertion = (AssertionImpl) rst.get(0).getSecurityTokens().get(0);
+
+            if (assertion == null) {
+                LOGGER.debug("parseTokenFromString: assertion null");
+            } else {
+                LOGGER.debug("parseTokenFromString: {}", assertion);
+            }
+            return assertion;
+        } catch (final Exception ex) {
+            LOGGER.warn(ex.getMessage());
             return null;
-
-        } catch (final XMLParserException ex) {
-            logger.warn(ex.getMessage());
-            return null;
-
-        } catch (final UnsupportedEncodingException ex) {
-            logger.warn(ex.getMessage());
-            return null;
-
         }
-
-        //Get our SAML token
-        final List<RequestedSecurityToken> rst = rsToken.getRequestedSecurityToken();
-        final AssertionImpl assertion = (AssertionImpl) rst.get(0).getSecurityTokens().get(0);
-
-        if (assertion == null) {
-            logger.debug("parseTokenFromString: assertion null");
-        } else {
-            logger.debug("parseTokenFromString: {}", assertion.toString());
-        }
-
-        return assertion;
     }
 
     /**
@@ -254,16 +202,13 @@ public final class WsFederationUtils {
      * @param x509Creds list of x509certs to check.
      * @return true if the assertion's signature is valid, otherwise false
      */
-    public static boolean validateSignature(final AssertionImpl assertion, final List<BasicX509Credential> x509Creds) {
-        final Logger logger = LoggerFactory.getLogger(WsFederationUtils.class);
-
+    public static boolean validateSignature(final Assertion assertion, final List<X509Credential> x509Creds) {
         SignatureValidator signatureValidator;
-
-        for (BasicX509Credential cred : x509Creds) {
+        for (final X509Credential cred : x509Creds) {
             try {
                 signatureValidator = new SignatureValidator(cred);
             } catch (final Exception ex) {
-                logger.warn(ex.getMessage());
+                LOGGER.warn(ex.getMessage());
                 break;
             }
 
@@ -273,15 +218,15 @@ public final class WsFederationUtils {
             //try to validate
             try {
                 signatureValidator.validate(signature);
-                logger.debug("validateSignature: Signature is valid.");
+                LOGGER.debug("validateSignature: Signature is valid.");
                 return true;
 
             } catch (final ValidationException ex) {
-                logger.warn("validateSignature: Signature is NOT valid.");
-                logger.warn(ex.getMessage());
+                LOGGER.warn("validateSignature: Signature is NOT valid.");
+                LOGGER.warn(ex.getMessage());
             }
         }
-        logger.warn("validateSignature: Signature doesn't match any signing credential.");
+        LOGGER.warn("validateSignature: Signature doesn't match any signing credential.");
         return false;
     }
 

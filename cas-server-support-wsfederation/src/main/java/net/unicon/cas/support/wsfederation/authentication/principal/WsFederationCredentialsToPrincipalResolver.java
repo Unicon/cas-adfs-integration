@@ -17,9 +17,8 @@
 package net.unicon.cas.support.wsfederation.authentication.principal;
 
 import net.unicon.cas.support.wsfederation.WsFederationConfiguration;
-import org.jasig.cas.authentication.principal.AbstractPersonDirectoryCredentialsToPrincipalResolver;
-import org.jasig.cas.authentication.principal.Credentials;
-import org.jasig.cas.authentication.principal.CredentialsToPrincipalResolver;
+import org.jasig.cas.authentication.Credential;
+import org.jasig.cas.authentication.principal.PersonDirectoryPrincipalResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author John Gasper
  * @since 3.5.1
  */
-public final class WsFederationCredentialsToPrincipalResolver extends AbstractPersonDirectoryCredentialsToPrincipalResolver
-        implements CredentialsToPrincipalResolver {
+public final class WsFederationCredentialsToPrincipalResolver extends PersonDirectoryPrincipalResolver {
 
     private final Logger logger = LoggerFactory.getLogger(WsFederationCredentialsToPrincipalResolver.class);
 
@@ -43,26 +41,17 @@ public final class WsFederationCredentialsToPrincipalResolver extends AbstractPe
      * @return the principal id
      */
     @Override
-    protected String extractPrincipalId(final Credentials credentials) {
+    protected String extractPrincipalId(final Credential credentials) {
 
-        final WsFederationCredentials wsFedCredentials = (WsFederationCredentials) credentials;
-        final String principalId = wsFedCredentials.getCredential().getAttributes().get(
+        final WsFederationCredential wsFedCredentials = (WsFederationCredential) credentials;
+        final String principalId = wsFedCredentials.getAttributes().get(
                 this.configuration.getIdentityAttribute()
         ).toString();
         logger.debug("principalId : {}", principalId);
         return principalId;
     }
 
-    /**
-     * Determines if this resolver can support the credentials provided.
-     *
-     * @param credentials the credentials.
-     * @return true if Credentials are WsFederationCredentials, false otherwise.
-     */
-    @Override
-    public boolean supports(final Credentials credentials) {
-        return credentials != null && (WsFederationCredentials.class.isAssignableFrom(credentials.getClass()));
-    }
+
 
     /**
      * Sets the configuration.
@@ -72,4 +61,10 @@ public final class WsFederationCredentialsToPrincipalResolver extends AbstractPe
     public void setConfiguration(final WsFederationConfiguration configuration) {
         this.configuration = configuration;
     }
+
+    @Override
+    public boolean supports(final Credential credential) {
+        return credential != null && (WsFederationCredential.class.isAssignableFrom(credential.getClass()));
+    }
+
 }

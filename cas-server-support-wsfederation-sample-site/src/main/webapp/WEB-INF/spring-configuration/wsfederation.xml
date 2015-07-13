@@ -21,7 +21,7 @@
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
        
     <description>
         This configures the WS-Federation support module.
@@ -42,17 +42,17 @@
          attributeMutator: (optional) a class (defined by you) that can modify the attributes/assertions returned by the ADFS server
          signingCertificateFiles: ADFS's signing certificate used to validate the token/assertions issued by ADFS.
          -->
-        <property name="identityProviderIdentifier" value="http://adfs.example.org/adfs/services/trust" />
-        <property name="identityProviderUrl" value="https://adfs.example.org/adfs/ls/" />
-        <property name="identityAttribute" value="upn" />
-        <property name="relyingPartyIdentifier" value="urn:federation:cas" />
-        <property name="tolerance" value="60000" />
+        <property name="identityProviderIdentifier" value="${adfs.idp.id}" />
+        <property name="identityProviderUrl" value="${adfs.idp.login.url}" />
+        <property name="identityAttribute" value="${adfs.identity.attribute}" />
+        <property name="relyingPartyIdentifier" value="${adfs.relying.party}" />
+        <property name="tolerance" value="${adfs.tolerance:60000}" />
         <property name="attributeMutator">
             <bean class="org.example.cas.support.wsfederation.WsFedAttributeMutatorImpl" />
         </property>
         <property name="signingCertificateFiles">
             <list>
-                <value>file:/etc/cas/signing.cer</value>
+                <value>${adfs.signing.cert}</value>
             </list>
         </property>
     </bean>

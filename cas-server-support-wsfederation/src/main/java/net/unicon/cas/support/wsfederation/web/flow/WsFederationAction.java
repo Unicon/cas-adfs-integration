@@ -19,14 +19,12 @@ package net.unicon.cas.support.wsfederation.web.flow;
 import net.unicon.cas.support.wsfederation.WsFederationConfiguration;
 import net.unicon.cas.support.wsfederation.WsFederationUtils;
 import net.unicon.cas.support.wsfederation.authentication.principal.WsFederationCredential;
-import net.unicon.cas.support.wsfederation.authentication.principal.WsFederationCredentials;
 import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.CentralAuthenticationService;
-import org.jasig.cas.authentication.principal.Credentials;
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.ticket.TicketException;
 import org.jasig.cas.web.support.WebUtils;
-import org.opensaml.saml1.core.impl.AssertionImpl;
+import org.opensaml.saml1.core.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.webflow.action.AbstractAction;
@@ -53,7 +51,6 @@ public final class WsFederationAction extends AbstractAction {
     private static final String SERVICE = "service";
     private static final String THEME = "theme";
     private static final String WA = "wa";
-    private static final String WCTX = "wctx";
     private static final String WRESULT = "wresult";
     private static final String WSIGNIN = "wsignin1.0";
     private final Logger logger = LoggerFactory.getLogger(WsFederationAction.class);
@@ -84,17 +81,13 @@ public final class WsFederationAction extends AbstractAction {
                 final String wresult = request.getParameter(WRESULT);
                 logger.debug("wresult : {}", wresult);
 
-                final String wctx = request.getParameter(WCTX);
-                logger.debug("wctx : {}", wctx);
-
                 // create credentials
-                final AssertionImpl assertion = WsFederationUtils.parseTokenFromString(wresult);
+                final Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
 
                 //Validate the signature
                 if (assertion != null && WsFederationUtils.validateSignature(assertion, configuration.getSigningCertificates())) {
                     final WsFederationCredential credential = WsFederationUtils.createCredentialFromToken(assertion);
 
-                    final Credentials credentials;
                     if (credential != null && credential.isValid(configuration.getRelyingPartyIdentifier(),
                             configuration.getIdentityProviderIdentifier(),
                             configuration.getTolerance())) {
@@ -103,9 +96,6 @@ public final class WsFederationAction extends AbstractAction {
                         if (configuration.getAttributeMutator() != null) {
                             configuration.getAttributeMutator().modifyAttributes(credential.getAttributes());
                         }
-
-                        credentials = new WsFederationCredentials(credential);
-
                     } else {
                         logger.warn("SAML assertions are blank or no longer valid.");
                         return error();
@@ -123,16 +113,15 @@ public final class WsFederationAction extends AbstractAction {
                         logger.warn("Session is most-likely empty: {}", ex.getMessage());
                     }
 
-
                     try {
                         WebUtils.putTicketGrantingTicketInRequestScope(context, this.centralAuthenticationService
-                                .createTicketGrantingTicket(credentials));
+                                .createTicketGrantingTicket(credential));
 
-                        logger.info("Token validated and new WsFederationCredcredentials created: {}", credentials.toString());
+                        logger.info("Token validated and new {} created: {}", credential.getClass().getName(), credential);
                         return success();
 
                     } catch (final TicketException e) {
-                        logger.error(e.getMessage());
+                        logger.error(e.getMessage(), e);
                         return error();
                     }
 
@@ -166,7 +155,7 @@ public final class WsFederationAction extends AbstractAction {
             return error();
 
         } catch (final Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
             return error();
         }
 
