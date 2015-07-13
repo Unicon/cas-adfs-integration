@@ -5,9 +5,9 @@
     <groupId>net.unicon.cas.adfs</groupId>
     <artifactId>cas-adfs-parent</artifactId>
     <packaging>pom</packaging>
-    <name>CAS ADFS Integration</name>
+    <name>CAS ADFS Integration Parent</name>
     <description>Integration scenarios for the Apereo CAS Server and Microsoft ADFS</description>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <url>https://github.com/Unicon/cas-adfs-integration</url>
     <inceptionYear>2014</inceptionYear>

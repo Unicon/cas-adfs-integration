@@ -19,7 +19,7 @@
     <parent>
         <groupId>net.unicon.cas.adfs</groupId>
         <artifactId>cas-adfs-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -30,6 +30,7 @@
     <version>${cas.version}</version>
     -->
     <packaging>war</packaging>
+    <name>Sample CAS Overlay</name>
     <description>Sample web application demonstrating the cas-server-support-wsfederation library.</description>
 
     <properties>
