@@ -12,8 +12,9 @@
     build this overlay, the entire project needs to be built first.
 
     If you're feeling adventurous and rather use this project as a standalone
-    starting point, then
-
+    starting point, then make sure you remove the "parent" block below
+    and enable your own groupid and version. This will allow you to run the sample
+    app independent of the remaining modules in the project.
     -->
     <parent>
         <groupId>net.unicon.cas.adfs</groupId>
