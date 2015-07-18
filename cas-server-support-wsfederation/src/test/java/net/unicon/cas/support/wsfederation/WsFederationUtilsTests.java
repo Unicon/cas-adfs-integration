@@ -21,16 +21,19 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.opensaml.saml1.core.Assertion;
-import org.opensaml.xml.security.x509.X509Credential;
+import org.opensaml.saml.saml1.core.Assertion;
+import org.opensaml.security.credential.Credential;
+import org.opensaml.security.x509.X509Credential;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -46,7 +49,7 @@ public class WsFederationUtilsTests {
     WsFederationConfiguration wsFedConfig;
     
     @Autowired
-    HashMap<String,String> testTokens;
+    Map<String,String> testTokens;
 
     @Autowired
     ApplicationContext ctx;
@@ -57,7 +60,7 @@ public class WsFederationUtilsTests {
      */
     @Test
     public void testParseTokenString() throws Exception {
-        String wresult = testTokens.get("goodToken");
+        final String wresult = testTokens.get("goodToken");
         final Assertion result = WsFederationUtils.parseTokenFromString(wresult);
         assertNotNull("testParseTokenString() - Not null", result);
     }
@@ -68,10 +71,10 @@ public class WsFederationUtilsTests {
      */
     @Test
     public void testCreateCredentialFromToken() throws Exception {
-        String wresult = testTokens.get("goodToken");
+        final String wresult = testTokens.get("goodToken");
         final Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
         
-        WsFederationCredential expResult = new WsFederationCredential();
+        final WsFederationCredential expResult = new WsFederationCredential();
         expResult.setIssuedOn(new DateTime("2014-02-26T22:51:16.504Z").withZone(DateTimeZone.UTC));
         expResult.setNotBefore(new DateTime("2014-02-26T22:51:16.474Z").withZone(DateTimeZone.UTC));
         expResult.setNotOnOrAfter(new DateTime("2014-02-26T23:51:16.474Z").withZone(DateTimeZone.UTC));
@@ -79,7 +82,7 @@ public class WsFederationUtilsTests {
         expResult.setAudience("urn:federation:cas");
         expResult.setId("_6257b2bf-7361-4081-ae1f-ec58d4310f61");
         
-        WsFederationCredential result = WsFederationUtils.createCredentialFromToken(assertion);
+        final WsFederationCredential result = WsFederationUtils.createCredentialFromToken(assertion);
         
         assertNotNull("testCreateCredentialFromToken() - Not Null", result);
         assertEquals("testCreateCredentialFromToken() - IssuedOn", expResult.getIssuedOn(), result.getIssuedOn());
@@ -96,7 +99,7 @@ public class WsFederationUtilsTests {
      */
     @Test
     public void testGetSigningCredential() throws Exception {
-        X509Credential result = WsFederationUtils.getSigningCredential(wsFedConfig.getSigningCertificateFiles().iterator().next());
+        final Credential result = WsFederationUtils.getSigningCredential(wsFedConfig.getSigningCertificateFiles().iterator().next());
         assertNotNull("testGetSigningCredential() - Not Null", result);        
     }
 
@@ -106,9 +109,9 @@ public class WsFederationUtilsTests {
      */
     @Test
     public void testValidateSignatureGoodToken() throws Exception {
-        String wresult = testTokens.get("goodToken");
-        Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
-        boolean result = WsFederationUtils.validateSignature(assertion, wsFedConfig.getSigningCertificates());
+        final String wresult = testTokens.get("goodToken");
+        final Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
+        final boolean result = WsFederationUtils.validateSignature(assertion, wsFedConfig);
         assertTrue("testValidateSignatureGoodToken() - True", result);
     }
 
@@ -118,9 +121,9 @@ public class WsFederationUtilsTests {
      */
     @Test
     public void testValidateSignatureModifiedAttribute() throws Exception {
-        String wresult = testTokens.get("badTokenModifiedAttribute");
-        Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
-        boolean result = WsFederationUtils.validateSignature(assertion, wsFedConfig.getSigningCertificates());
+        final String wresult = testTokens.get("badTokenModifiedAttribute");
+        final Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
+        final boolean result = WsFederationUtils.validateSignature(assertion, wsFedConfig);
         assertFalse("testValidateSignatureModifiedAttribute() - False", result);
     }
 
@@ -129,12 +132,14 @@ public class WsFederationUtilsTests {
      * @throws Exception
      */
     @Test
+    @DirtiesContext
     public void testValidateSignatureBadKey() throws Exception {
-        List<X509Credential> signingWallet = new ArrayList<X509Credential>();
+        final List<Credential> signingWallet = new ArrayList<>();
         signingWallet.add(WsFederationUtils.getSigningCredential(ctx.getResource("classpath:bad-signing.crt")));
-        String wresult = testTokens.get("goodToken");
-        Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
-        boolean result = WsFederationUtils.validateSignature(assertion, signingWallet);
+        final String wresult = testTokens.get("goodToken");
+        final Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
+        wsFedConfig.getSigningCertificates().addAll(signingWallet);
+        final boolean result = WsFederationUtils.validateSignature(assertion, wsFedConfig);
         assertFalse("testValidateSignatureModifiedKey() - False", result);
     }
 
@@ -144,9 +149,9 @@ public class WsFederationUtilsTests {
      */
     @Test
     public void testValidateSignatureModifiedSignature() throws Exception {
-        String wresult = testTokens.get("badTokenModifiedSignature");
-        Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
-        boolean result = WsFederationUtils.validateSignature(assertion, wsFedConfig.getSigningCertificates());
+        final String wresult = testTokens.get("badTokenModifiedSignature");
+        final Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
+        final boolean result = WsFederationUtils.validateSignature(assertion, wsFedConfig);
         assertFalse("testValidateSignatureModifiedSignature() - False", result);
     }
 
@@ -154,7 +159,7 @@ public class WsFederationUtilsTests {
      *
      * @param config a configuration object
      */
-    public void setWsFedConfig(WsFederationConfiguration config) {
+    public void setWsFedConfig(final WsFederationConfiguration config) {
         this.wsFedConfig = config;
     }
 
@@ -162,7 +167,7 @@ public class WsFederationUtilsTests {
      *
      * @param testTokens a configuration object
      */
-    public void setTestTokens(HashMap<String, String> testTokens) {
+    public void setTestTokens(final Map<String, String> testTokens) {
         this.testTokens = testTokens;
     }
 

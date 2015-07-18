@@ -16,7 +16,7 @@
 
 package net.unicon.cas.support.wsfederation;
 
-import org.opensaml.xml.security.x509.X509Credential;
+import org.opensaml.security.credential.Credential;
 import org.springframework.core.io.Resource;
 
 import javax.validation.constraints.NotNull;
@@ -45,9 +45,12 @@ public final class WsFederationConfiguration {
     @NotNull
     private String relyingPartyIdentifier;
 
+    @NotNull
+    private String identityProviderMetadataUrl;
+
     private int tolerance = 10000;
 
-    private List<X509Credential> signingWallet;
+    private List<Credential> signingWallet;
 
     private WsFederationAttributeMutator attributeMutator;
 
@@ -128,7 +131,7 @@ public final class WsFederationConfiguration {
      *
      * @return X509credentials of the signing certs
      */
-    public List<X509Credential> getSigningCertificates() {
+    public List<Credential> getSigningCertificates() {
         return this.signingWallet;
     }
 
@@ -149,7 +152,7 @@ public final class WsFederationConfiguration {
     public void setSigningCertificateFiles(final List<Resource> signingCertificateFiles) {
         this.signingCertificateFiles = signingCertificateFiles;
 
-        final List<X509Credential> signingCerts = new ArrayList<X509Credential>();
+        final List<Credential> signingCerts = new ArrayList<>();
 
         for (final Resource file : signingCertificateFiles) {
             signingCerts.add(WsFederationUtils.getSigningCredential(file));
@@ -194,4 +197,11 @@ public final class WsFederationConfiguration {
         this.attributeMutator = attributeMutator;
     }
 
+    public String getIdentityProviderMetadataUrl() {
+        return identityProviderMetadataUrl;
+    }
+
+    public void setIdentityProviderMetadataUrl(final String identityProviderMetadataUrl) {
+        this.identityProviderMetadataUrl = identityProviderMetadataUrl;
+    }
 }

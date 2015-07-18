@@ -24,7 +24,7 @@ import org.jasig.cas.CentralAuthenticationService;
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.ticket.TicketException;
 import org.jasig.cas.web.support.WebUtils;
-import org.opensaml.saml1.core.Assertion;
+import org.opensaml.saml.saml1.core.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.webflow.action.AbstractAction;
@@ -85,7 +85,7 @@ public final class WsFederationAction extends AbstractAction {
                 final Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
 
                 //Validate the signature
-                if (assertion != null && WsFederationUtils.validateSignature(assertion, configuration.getSigningCertificates())) {
+                if (WsFederationUtils.validateSignature(assertion, configuration)) {
                     final WsFederationCredential credential = WsFederationUtils.createCredentialFromToken(assertion);
 
                     if (credential != null && credential.isValid(configuration.getRelyingPartyIdentifier(),
