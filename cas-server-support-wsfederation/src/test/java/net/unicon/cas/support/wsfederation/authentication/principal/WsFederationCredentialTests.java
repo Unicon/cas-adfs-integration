@@ -28,7 +28,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -69,21 +68,12 @@ public class WsFederationCredentialTests {
         final Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
         final WsFederationCredential instance = WsFederationUtils.createCredentialFromToken(assertion);
         final String expResult =
-                "ID: _6257b2bf-7361-4081-ae1f-ec58d4310f61\n" +
-                "Issuer: http://adfs.example.com/adfs/services/trust\n" +
-                "Audience: urn:federation:cas\n" +
-                "Audience Method: urn:federation:authentication:windows\n" +
-                "Issued On: 2014-02-26T22:51:16.504Z\n" +
-                "Valid After: 2014-02-26T22:51:16.474Z\n" +
-                "Valid Before: 2014-02-26T23:51:16.474Z\n" +
-                "Attributes:\n" + 
-                "  emailaddress: jgasper@example.com\n" +
-                "  upn: jgasper@example.com\n" +
-                "  givenname: John\n" + 
-                "  surname: Gasper\n" +
-                "  Group: example.com\\Domain Users\n";
+        "[ID=_6257b2bf-7361-4081-ae1f-ec58d4310f61,Issuer=http://adfs.example.com/adfs/services/trust,"
+        + "Audience=urn:federation:cas,Authentication Method=urn:federation:authentication:windows,"
+        + "Issued On=2014-02-26T22:51:16.504Z,Valid After=2014-02-26T22:51:16.474Z,Valid Before=2014-02-26T23:51:16.474Z,"
+        + "Attributes={Group=example.com\\Domain Users, upn=jgasper@example.com, surname=Gasper, givenname=John, emailaddress=jgasper@example.com}]";
         final String result = instance.toString();
-        assertEquals("toString() not equal", expResult,result);
+        assertEquals("toString() not equal", expResult, result);
     }
 
     /**
@@ -92,7 +82,7 @@ public class WsFederationCredentialTests {
      */
     @Test
     public void testIsValidAllGood() throws Exception {
-        boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
+        final boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
         assertTrue("testIsValidAllGood() - True", result);
     }
 
@@ -114,8 +104,7 @@ public class WsFederationCredentialTests {
     @Test
     public void testIsValidBadIssuer() throws Exception {
         standardCred.setIssuer("urn:NotThem");
-        
-        boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
+        final boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
         assertFalse("testIsValidBadIssuer() - False", result);
     }
 
@@ -129,7 +118,7 @@ public class WsFederationCredentialTests {
         standardCred.setNotOnOrAfter(new DateTime().withZone(DateTimeZone.UTC).plusHours(1).plusDays(1));
         standardCred.setIssuedOn(new DateTime().withZone(DateTimeZone.UTC).plusDays(1));
         
-        boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
+        final boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
         assertFalse("testIsValidEarlyToken() - False", result);
     }
 
@@ -143,7 +132,7 @@ public class WsFederationCredentialTests {
         standardCred.setNotOnOrAfter(new DateTime().withZone(DateTimeZone.UTC).plusHours(1).minusDays(1));
         standardCred.setIssuedOn(new DateTime().withZone(DateTimeZone.UTC).minusDays(1));
         
-        boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
+        final boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
         assertFalse("testIsValidOldToken() - False", result);
     }
 
@@ -161,7 +150,7 @@ public class WsFederationCredentialTests {
 
     /**
      * sets the Token
-     * @param testTokens
+     * @param testTokens the test tokens
      */
     public void setTestTokens(final HashMap<String, String> testTokens) {
         this.testTokens = testTokens;

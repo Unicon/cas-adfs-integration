@@ -24,7 +24,6 @@ import org.junit.runner.RunWith;
 import org.opensaml.saml.saml1.core.Assertion;
 import org.opensaml.security.credential.Credential;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,7 +32,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -138,6 +136,7 @@ public class WsFederationUtilsTests {
         signingWallet.add(WsFederationUtils.getSigningCredential(ctx.getResource("classpath:bad-signing.crt")));
         final String wresult = testTokens.get("goodToken");
         final Assertion assertion = WsFederationUtils.parseTokenFromString(wresult);
+        wsFedConfig.getSigningCertificates().clear();
         wsFedConfig.getSigningCertificates().addAll(signingWallet);
         final boolean result = WsFederationUtils.validateSignature(assertion, wsFedConfig);
         assertFalse("testValidateSignatureModifiedKey() - False", result);

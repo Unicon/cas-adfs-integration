@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public class WsFedAttributeMutatorImpl implements WsFederationAttributeMutator {
     private static final Logger LOGGER = LoggerFactory.getLogger(WsFedAttributeMutatorImpl.class);
+    private static final long serialVersionUID = 3686266548895867095L;
 
     @Override
     public void modifyAttributes(final Map<String, Object> attributes) {

@@ -16,6 +16,7 @@
 
 package net.unicon.cas.support.wsfederation;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -25,7 +26,7 @@ import java.util.Map;
  * @author John Gasper
  * @since 3.5.2
  */
-public interface WsFederationAttributeMutator {
+public interface WsFederationAttributeMutator extends Serializable {
     /**
      * modifyAttributes manipulates the attributes before they are assigned to the credential.
      *

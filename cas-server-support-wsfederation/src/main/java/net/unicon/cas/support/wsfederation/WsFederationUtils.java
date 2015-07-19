@@ -37,19 +37,16 @@ import org.opensaml.core.xml.schema.XSAny;
 import org.opensaml.saml.common.xml.SAMLConstants;
 import org.opensaml.saml.criterion.EntityRoleCriterion;
 import org.opensaml.saml.criterion.ProtocolCriterion;
-import org.opensaml.saml.metadata.resolver.ChainingMetadataResolver;
-import org.opensaml.saml.metadata.resolver.MetadataResolver;
-import org.opensaml.saml.metadata.resolver.impl.BasicRoleDescriptorResolver;
-import org.opensaml.saml.metadata.resolver.impl.DOMMetadataResolver;
 import org.opensaml.saml.saml1.core.Assertion;
 import org.opensaml.saml.saml1.core.Attribute;
 import org.opensaml.saml.saml1.core.Conditions;
 import org.opensaml.saml.saml2.metadata.IDPSSODescriptor;
-import org.opensaml.saml.security.impl.MetadataCredentialResolver;
 import org.opensaml.saml.security.impl.SAMLSignatureProfileValidator;
 import org.opensaml.security.SecurityException;
 import org.opensaml.security.credential.Credential;
+import org.opensaml.security.credential.CredentialResolver;
 import org.opensaml.security.credential.UsageType;
+import org.opensaml.security.credential.impl.StaticCredentialResolver;
 import org.opensaml.security.criteria.UsageCriterion;
 import org.opensaml.security.x509.BasicX509Credential;
 import org.opensaml.soap.wsfed.RequestSecurityTokenResponse;
@@ -256,39 +253,11 @@ public final class WsFederationUtils {
      */
     private static SignatureTrustEngine buildSignatureTrustEngine(final WsFederationConfiguration wsFederationConfiguration) {
         try {
-            final ChainingMetadataResolver metadataManager = new ChainingMetadataResolver();
-            metadataManager.setId(ChainingMetadataResolver.class.getCanonicalName());
-            final List<MetadataResolver> list = new ArrayList<>();
-
-
-            final InputStream in = wsFederationConfiguration.getIdentityProviderMetadata().getInputStream();
-            final Document inCommonMDDoc = Configuration.getParserPool().parse(in);
-            final Element metadataRoot = inCommonMDDoc.getDocumentElement();
-            final DOMMetadataResolver idpMetadataProvider = new DOMMetadataResolver(metadataRoot);
-
-            idpMetadataProvider.setParserPool(Configuration.getParserPool());
-            idpMetadataProvider.setFailFastInitialization(true);
-            idpMetadataProvider.setRequireValidMetadata(true);
-            idpMetadataProvider.setId(idpMetadataProvider.getClass().getCanonicalName());
-            idpMetadataProvider.initialize();
-
-            list.add(idpMetadataProvider);
-            metadataManager.setResolvers(list);
-            metadataManager.initialize();
-
-            final MetadataCredentialResolver metadataCredentialResolver = new MetadataCredentialResolver();
-            final BasicRoleDescriptorResolver roleResolver = new BasicRoleDescriptorResolver(metadataManager);
-
+            final CredentialResolver resolver = new StaticCredentialResolver(wsFederationConfiguration.getSigningCertificates());
             final KeyInfoCredentialResolver keyResolver =
                     new StaticKeyInfoCredentialResolver(wsFederationConfiguration.getSigningCertificates());
 
-            metadataCredentialResolver.setKeyInfoCredentialResolver(keyResolver);
-            metadataCredentialResolver.setRoleDescriptorResolver(roleResolver);
-
-            metadataCredentialResolver.initialize();
-            roleResolver.initialize();
-
-            return new ExplicitKeySignatureTrustEngine(metadataCredentialResolver, keyResolver);
+            return new ExplicitKeySignatureTrustEngine(resolver, keyResolver);
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }

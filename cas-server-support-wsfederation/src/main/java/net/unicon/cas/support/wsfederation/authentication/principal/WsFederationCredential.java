@@ -16,6 +16,8 @@
 
 package net.unicon.cas.support.wsfederation.authentication.principal;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jasig.cas.authentication.Credential;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -121,17 +123,18 @@ public final class WsFederationCredential implements Credential {
      */
     @Override
     public String toString() {
-        String attributeList = "";
 
-        for (final String attr : this.attributes.keySet()) {
-            attributeList += "  " + attr + ": " + (attributes.get(attr)) + "\n";
-        }
+        return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
+                .append("ID", this.id)
+                .append("Issuer", this.issuer)
+                .append("Audience", this.audience)
+                .append("Authentication Method", this.authenticationMethod)
+                .append("Issued On", this.issuedOn)
+                .append("Valid After", this.notBefore)
+                .append("Valid Before", this.notOnOrAfter)
+                .append("Attributes", this.attributes)
+                .build();
 
-        final String readable = "ID: %s\nIssuer: %s\nAudience: %s\nAudience Method: %s\nIssued On: %s\n"
-                + "Valid After: %s\nValid Before: %s\nAttributes:\n%s";
-
-        return String.format(readable, this.id, this.issuer, this.audience, this.authenticationMethod,
-                this.issuedOn.toString(), this.notBefore.toString(), this.notOnOrAfter.toString(), attributeList);
     }
 
     /**

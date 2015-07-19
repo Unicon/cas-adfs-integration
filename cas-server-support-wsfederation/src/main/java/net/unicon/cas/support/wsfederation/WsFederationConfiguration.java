@@ -17,12 +17,10 @@
 package net.unicon.cas.support.wsfederation;
 
 import org.opensaml.security.credential.Credential;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +30,8 @@ import java.util.List;
  * @author John Gasper
  * @since 3.5.2
  */
-public final class WsFederationConfiguration {
+public final class WsFederationConfiguration implements Serializable {
+    private static final long serialVersionUID = 2310859477512242659L;
     @NotNull
     private String identityAttribute;
 
@@ -47,9 +46,6 @@ public final class WsFederationConfiguration {
 
     @NotNull
     private String relyingPartyIdentifier;
-
-    @NotNull
-    private String identityProviderMetadataUrl;
 
     private int tolerance = 10000;
 
@@ -200,31 +196,4 @@ public final class WsFederationConfiguration {
         this.attributeMutator = attributeMutator;
     }
 
-    /**
-     * Gets identity provider metadata.
-     *
-     * @return the identity provider metadata
-     */
-    public Resource getIdentityProviderMetadata() {
-        try {
-            final String metadataUrl = this.identityProviderMetadataUrl;
-
-            if (metadataUrl.startsWith("classpath:")) {
-                return new ClassPathResource(metadataUrl.substring(10));
-            }
-            if (metadataUrl.startsWith("https")) {
-                return new UrlResource(metadataUrl);
-            }
-            if (metadataUrl.startsWith("file")) {
-                return new FileSystemResource(metadataUrl);
-            }
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
-    public void setIdentityProviderMetadataUrl(final String identityProviderMetadataUrl) {
-        this.identityProviderMetadataUrl = identityProviderMetadataUrl;
-    }
 }
