@@ -17,15 +17,16 @@
 package net.unicon.cas.support.wsfederation.authentication.handler.support;
 
 import net.unicon.cas.support.wsfederation.authentication.principal.WsFederationCredential;
-import org.jasig.cas.authentication.BasicCredentialMetaData;
+import org.jasig.cas.MessageDescriptor;
 import org.jasig.cas.authentication.Credential;
 import org.jasig.cas.authentication.HandlerResult;
 import org.jasig.cas.authentication.PreventedException;
 import org.jasig.cas.authentication.handler.support.AbstractPreAndPostProcessingAuthenticationHandler;
-import org.jasig.cas.authentication.principal.SimplePrincipal;
+import org.jasig.cas.authentication.principal.Principal;
 
 import javax.security.auth.login.FailedLoginException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 
 /**
  * This handler authenticates Security token/credentials.
@@ -50,8 +51,10 @@ public final class WsFederationAuthenticationHandler extends AbstractPreAndPostP
     protected HandlerResult doAuthentication(final Credential credential) throws GeneralSecurityException, PreventedException {
         final WsFederationCredential wsFederationCredentials = (WsFederationCredential) credential;
         if (wsFederationCredentials != null) {
-            return new HandlerResult(this, new BasicCredentialMetaData(wsFederationCredentials),
-                    new SimplePrincipal(wsFederationCredentials.getId()));
+            final Principal principal = this.principalFactory.createPrincipal(wsFederationCredentials.getId(),
+                    wsFederationCredentials.getAttributes());
+
+            return this.createHandlerResult(wsFederationCredentials, principal, new ArrayList<MessageDescriptor>());
         }
         throw new FailedLoginException();
     }

@@ -3,3 +3,4 @@ target/
 *.log
 **/overlays/**
 *.iml
+*.releaseBackup

@@ -114,8 +114,7 @@ public final class WsFederationAction extends AbstractAction {
                     }
 
                     try {
-                        WebUtils.putTicketGrantingTicketInRequestScope(context, this.centralAuthenticationService
-                                .createTicketGrantingTicket(credential));
+                        WebUtils.putTicketGrantingTicketInScopes(context, this.centralAuthenticationService.createTicketGrantingTicket(credential));
 
                         logger.info("Token validated and new {} created: {}", credential.getClass().getName(), credential);
                         return success();
