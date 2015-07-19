@@ -28,6 +28,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -40,7 +41,7 @@ import static org.junit.Assert.*;
 public class WsFederationCredentialTests {
 
     @Autowired
-    HashMap<String,String> testTokens;
+    HashMap<String, String> testTokens;
     
     WsFederationCredential standardCred;
 
@@ -154,7 +155,7 @@ public class WsFederationCredentialTests {
     public void testIsValidExpiredIssuedOn() throws Exception {
         standardCred.setIssuedOn(new DateTime().withZone(DateTimeZone.UTC).minusSeconds(3));
         
-        boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
+        final boolean result = standardCred.isValid("urn:federation:cas", "http://adfs.example.com/adfs/services/trust", 2000);
         assertFalse("testIsValidOldToken() - False", result);
     }
 
@@ -162,7 +163,7 @@ public class WsFederationCredentialTests {
      * sets the Token
      * @param testTokens
      */
-    public void setTestTokens(HashMap<String, String> testTokens) {
+    public void setTestTokens(final HashMap<String, String> testTokens) {
         this.testTokens = testTokens;
     }
 }

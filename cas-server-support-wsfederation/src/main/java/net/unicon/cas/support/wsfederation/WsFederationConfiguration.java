@@ -17,7 +17,10 @@
 package net.unicon.cas.support.wsfederation;
 
 import org.opensaml.security.credential.Credential;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -197,8 +200,28 @@ public final class WsFederationConfiguration {
         this.attributeMutator = attributeMutator;
     }
 
-    public String getIdentityProviderMetadataUrl() {
-        return identityProviderMetadataUrl;
+    /**
+     * Gets identity provider metadata.
+     *
+     * @return the identity provider metadata
+     */
+    public Resource getIdentityProviderMetadata() {
+        try {
+            final String metadataUrl = this.identityProviderMetadataUrl;
+
+            if (metadataUrl.startsWith("classpath:")) {
+                return new ClassPathResource(metadataUrl.substring(10));
+            }
+            if (metadataUrl.startsWith("https")) {
+                return new UrlResource(metadataUrl);
+            }
+            if (metadataUrl.startsWith("file")) {
+                return new FileSystemResource(metadataUrl);
+            }
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
     public void setIdentityProviderMetadataUrl(final String identityProviderMetadataUrl) {

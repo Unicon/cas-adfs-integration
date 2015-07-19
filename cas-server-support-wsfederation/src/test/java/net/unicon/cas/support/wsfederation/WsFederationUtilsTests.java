@@ -23,8 +23,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opensaml.saml.saml1.core.Assertion;
 import org.opensaml.security.credential.Credential;
-import org.opensaml.security.x509.X509Credential;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -49,7 +49,7 @@ public class WsFederationUtilsTests {
     WsFederationConfiguration wsFedConfig;
     
     @Autowired
-    Map<String,String> testTokens;
+    HashMap<String, String> testTokens;
 
     @Autowired
     ApplicationContext ctx;
@@ -167,7 +167,7 @@ public class WsFederationUtilsTests {
      *
      * @param testTokens a configuration object
      */
-    public void setTestTokens(final Map<String, String> testTokens) {
+    public void setTestTokens(final HashMap<String, String> testTokens) {
         this.testTokens = testTokens;
     }
 

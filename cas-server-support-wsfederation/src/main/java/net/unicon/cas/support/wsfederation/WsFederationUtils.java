@@ -63,7 +63,6 @@ import org.opensaml.xmlsec.signature.support.impl.ExplicitKeySignatureTrustEngin
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.util.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -261,9 +260,8 @@ public final class WsFederationUtils {
             metadataManager.setId(ChainingMetadataResolver.class.getCanonicalName());
             final List<MetadataResolver> list = new ArrayList<>();
 
-            final String metadataUrl = wsFederationConfiguration.getIdentityProviderMetadataUrl();
-            final UrlResource resource = new UrlResource(metadataUrl);
-            final InputStream in = resource.getInputStream();
+
+            final InputStream in = wsFederationConfiguration.getIdentityProviderMetadata().getInputStream();
             final Document inCommonMDDoc = Configuration.getParserPool().parse(in);
             final Element metadataRoot = inCommonMDDoc.getDocumentElement();
             final DOMMetadataResolver idpMetadataProvider = new DOMMetadataResolver(metadataRoot);
